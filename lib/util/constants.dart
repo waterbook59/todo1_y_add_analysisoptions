@@ -1,0 +1,1 @@
+enum EditType{add,upload}
