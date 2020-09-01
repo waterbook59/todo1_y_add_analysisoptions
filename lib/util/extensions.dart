@@ -1,0 +1,43 @@
+
+import 'package:todo1yaddanalysisoptions/data_models/task.dart';
+import 'package:todo1yaddanalysisoptions/models/db/database.dart';
+
+
+
+//リスト形式ではなくて１行単位
+//Dartのモデルクラス(Task)=>DBのテーブルクラス(TaskRecord)へ変換
+
+extension ConvertToTaskRecord on Task{
+
+  TaskRecord toTaskRecord(Task task){
+    // var wordRecord = WordRecord();のインスタンスは作らず直接代入
+    //todo varではなくfinalでも良いか
+    var  taskRecord = TaskRecord(
+      title:task.title ?? '',
+      memo:task.memo ?? '',
+      isToDo: task.isToDo ?? false,
+    );
+    return taskRecord;
+  }
+}
+
+
+//DBのテーブルクラス(WordRecord)=> Dartのモデルクラス(task)へ変換
+extension ConvertToTasks on List<TaskRecord>{
+
+  List<Task> toTasks(List<TaskRecord> taskRecords){
+    //todo varではなくfinalでも良いか
+    var tasks = <Task>[];
+    //todo forEach書き方変える
+    taskRecords.forEach((taskRecord){
+      tasks.add(
+          Task(
+            title:taskRecord.title ?? '',
+            memo:taskRecord.memo ?? '',
+            isToDo: taskRecord.isToDo ?? false,
+          )
+      );
+    });
+    return tasks;
+  }
+}
