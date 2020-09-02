@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo1yaddanalysisoptions/style.dart';
-import 'package:todo1yaddanalysisoptions/view/screens/task_list_screen.dart';
+import 'package:todo1yaddanalysisoptions/view/screens/task_screen/task_list_screen.dart';
 
 import 'di/providers.dart';
 

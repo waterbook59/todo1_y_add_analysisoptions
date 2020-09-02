@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo1yaddanalysisoptions/util/constants.dart';
+import 'package:todo1yaddanalysisoptions/view/screens/task_screen/task_list_view.dart';
 import 'package:todo1yaddanalysisoptions/view_models/task_viewmodel.dart';
 
-import '../../style.dart';
-import 'add_task_screen.dart';
+import '../../../style.dart';
+import '../add_task_screen/add_task_screen.dart';
 
 class TaskListScreen extends StatelessWidget {
 
@@ -14,6 +15,7 @@ class TaskListScreen extends StatelessWidget {
 
     final viewModel = Provider.of<TaskViewModel>(context, listen: false);
     Future<void>(viewModel.getTaskList);
+    //中身が空の時の表記はTaskListView内で表示
 
     return Scaffold(
       appBar: AppBar(
@@ -29,7 +31,7 @@ class TaskListScreen extends StatelessWidget {
           ),
         ],
       ),
-//      body: TaskListView(),
+      body: TaskListView(),
     );
   }
 
