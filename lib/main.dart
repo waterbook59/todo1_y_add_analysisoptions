@@ -22,12 +22,16 @@ class MyApp extends StatelessWidget {
         brightness:Brightness.light,
         primaryColor: Colors.purpleAccent,
         fontFamily: regularFont,
+        //AppbarとかbottomNavbarとかのアイコンのデフォルト色
+        primaryIconTheme: IconThemeData(
+          color: Colors.black87,
+        ),
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         buttonColor: Colors.white30,
         primaryIconTheme: IconThemeData(
-          color: Colors.white,//Appbarとかbottomnavbarとかのデフォルト色
+          color: Colors.white,//AppbarとかbottomNavbarとかのデフォルト色
         ),
         iconTheme: IconThemeData(
           color: Colors.white,//bodyで使うCardとかのボタンのデフォルト色
