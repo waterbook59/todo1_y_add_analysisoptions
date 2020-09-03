@@ -6,6 +6,8 @@ import 'package:todo1yaddanalysisoptions/data_models/task.dart';
 import 'package:todo1yaddanalysisoptions/models/repository/task_repository.dart';
 
 class TaskViewModel extends ChangeNotifier{
+
+
   TaskViewModel({TaskRepository repository}):_taskRepository=repository;
   final TaskRepository _taskRepository;
 
@@ -16,6 +18,12 @@ class TaskViewModel extends ChangeNotifier{
   }
   bool _isDone =false;
   bool get isDone => _isDone;
+  TextEditingController _taskNameController;
+  TextEditingController get taskNameController => _taskNameController;
+  TextEditingController _taskMemoController;
+  TextEditingController get taskMemoController => _taskMemoController;
+  String _titleText='タイトル';
+  String get titleText => _titleText;
 
 
 
@@ -31,6 +39,7 @@ class TaskViewModel extends ChangeNotifier{
     }
   }
 
+  //todo タップしたらisTodo状態をDBへ更新 isTodoだけをDB上で更新
   Future<void> clickCheckButton(bool value) async{
     print('value:$value');
     _isDone= value;

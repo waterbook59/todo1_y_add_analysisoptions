@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo1yaddanalysisoptions/view/components/empty_view.dart';
+import 'package:todo1yaddanalysisoptions/view/screens/task_screen/empty_view.dart';
 import 'package:todo1yaddanalysisoptions/view_models/task_viewmodel.dart';
 
 class TaskListView extends StatelessWidget {
@@ -21,13 +21,14 @@ class TaskListView extends StatelessWidget {
               title: Text(taskViewModel.tasks[i].title),
               subtitle: Text(taskViewModel.tasks[i].memo),
               value: taskViewModel.tasks[i].isToDo,
-//              //todo タップしたら更新
+               //todo タップしたらisTodo状態をDBへ更新
               onChanged: (value) => _clickCheckButton(value, context),
             );
           });
     });
   }
 
+  //todo タップしたらisTodo状態をDBへ更新
   Future<void> _clickCheckButton(bool value, BuildContext context) async {
     final taskViewModel = Provider.of<TaskViewModel>(context, listen: false);
     taskViewModel.clickCheckButton(value);
