@@ -25,6 +25,8 @@ class TaskListView extends StatelessWidget {
             task: task,
             // addTaskScreenへtaskを渡す
             onTap: () => _onUpdate(context, task),
+            //todo TaskItemから返ってきたbool(value)をDBへ
+            taskDone: (value)=>_taskDone(context,value,task),
           );
         },
         separatorBuilder: (context, i) => const Divider(),
@@ -32,15 +34,23 @@ class TaskListView extends StatelessWidget {
     });
   }
 
-  //todo タップしたらisTodo状態をDBへ更新
-  Future<void> _clickCheckButton(bool value, BuildContext context) async {
-    final taskViewModel = Provider.of<TaskViewModel>(context, listen: false);
-    taskViewModel.clickCheckButton(value);
-  }
 
+//  Future<void> _clickCheckButton(bool value, BuildContext context) async {
+//    final taskViewModel = Provider.of<TaskViewModel>(context, listen: false);
+//    taskViewModel.clickCheckButton(value);
+//  }
+
+  //todo TaskItemをタップしたらtaskをAddTaskScreenへtaskを渡す
   void _onUpdate(BuildContext context, Task task) {
     Navigator.push(context,
         MaterialPageRoute<void>(
             builder: (context) => AddTaskScreen(editTask: task,)));
+  }
+
+  //todo TaskItem内のチェックボックスをタップしたらtask内のisDoneだけ更新
+  Future<void>_taskDone(BuildContext context,bool value, Task task) async{
+    final updateTask =Task(title: task.title,memo: task.memo,isToDo: value);
+    final taskViewModel = Provider.of<TaskViewModel>(context, listen: false);
+   await taskViewModel.taskDone(updateTask);
   }
 }

@@ -19,10 +19,13 @@ class TaskViewModel extends ChangeNotifier{
   }
   bool _isDone =false;
   bool get isDone => _isDone;
-  TextEditingController _taskNameController;
+
   TextEditingController get taskNameController => _taskNameController;
-  TextEditingController _taskMemoController;
   TextEditingController get taskMemoController => _taskMemoController;
+  //the getter 'text' was called on null flutterエラーがでたら
+  // It looks like you have not initialized your TextEditingController.
+  TextEditingController _taskNameController= TextEditingController();
+  TextEditingController _taskMemoController = TextEditingController();
   String _titleText='タイトル';
   String get titleText => _titleText;
 
@@ -41,27 +44,50 @@ class TaskViewModel extends ChangeNotifier{
   }
 
   //todo タップしたらisTodo状態をDBへ更新 isTodoだけをDB上で更新
-  Future<void> clickCheckButton(bool value) async{
-    print('value:$value');
-    _isDone= value;
+  //AVOID positional boolean parameters.
+  //bool値は名前付パラメータで渡すのが原則
+//  Future<void> clickCheckButton(bool value) async{
+//    print('value:$value');
+//    _isDone= value;
+//    notifyListeners();
+//  }
+
+  //今回viewModel側で条件分岐は行わずview側で行うのでeditTypeで場合わけなし
+//  Future<void> onTaskRegistered(EditType editType) async{
+//    var  task = Task(
+//      title: _taskNameController.text,
+//      memo: _taskMemoController.text,
+//      isToDo: false,
+//    );
+//    //editTypeで登録方法場合わけ
+//    switch(editType){
+//      case EditType.add:
+//        _taskRepository.addTaskRegistered();
+//        break;
+//      case EditType.upload:
+//        _taskRepository.uploadTaskRegistered();
+//    }
+//  }
+
+  //todo TaskItem内のチェックボックスをチェックしたらtask内のisDoneだけ更新
+  Future<void> taskDone(Task updateTask) async{
+    await _taskRepository.taskDone(updateTask);
     notifyListeners();
   }
 
-  Future<void> onTaskRegistered(EditType editType) async{
-
-    var  task = Task(
+  Future<void>onAddTaskRegistered() async{
+    print('onAddTask:viewModel層: ${_taskNameController.text}');
+    final  task = Task(
       title: _taskNameController.text,
       memo: _taskMemoController.text,
       isToDo: false,
     );
+    await _taskRepository.onAddTaskRegistered(task);
+    notifyListeners();
+  }
 
-    //editTypeで登録方法場合わけ
-    switch(editType){
-      case EditType.add:
-        _taskRepository.addTaskRegistered();
-        break;
-      case EditType.upload:
-        _taskRepository.uploadTaskRegistered();
-    }
+  Future<void>onUpdateTaskRegistered(Task editTask) async{
+    await _taskRepository.onUpdateTaskRegistered(editTask);
+    notifyListeners();
   }
 }

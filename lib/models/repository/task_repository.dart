@@ -1,4 +1,5 @@
 
+import 'package:moor_ffi/database.dart';
 import 'package:todo1yaddanalysisoptions/util/extensions.dart';
 import 'package:todo1yaddanalysisoptions/data_models/task.dart';
 import 'package:todo1yaddanalysisoptions/models/db/dao.dart';
@@ -15,4 +16,28 @@ class TaskRepository{
   return _result =resultTaskRecords.toTasks(resultTaskRecords);
   }
 
+  Future<void> onAddTaskRegistered(Task task) async{
+    print('onAddTask:viewModel層');
+    try{
+      final taskRecord =task.toTaskRecord(task);
+      await _dao.addTask(taskRecord);
+    }on SqliteException catch(e){
+      //ここでエラーを返さずにviewとviewModelのvalidationの条件に同じタイトルを弾くようにしてみる
+      print('repositoryエラー:この問題はすでに登録${e.toString()}');
+    }
+  }
+
+  Future<void> onUpdateTaskRegistered(Task editTask) async{
+    try{
+      final taskRecord =editTask.toTaskRecord(editTask);
+      await _dao.updateTask(taskRecord);
+    }on SqliteException catch(error){
+      print('repositoryエラー:この問題はすでに登録${error.toString()}');
+  }
+
+  }
+
+  Future<void> taskDone(Task updateTask) {
+    print('押したらチェックボックス変わる');
+  }
 }

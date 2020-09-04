@@ -21,6 +21,7 @@ class InputPart extends StatelessWidget {
 //            enabled: isTextInputEnabled,
             style: inputTextStyle,
             keyboardType: TextInputType.text,
+            //todo decoration:InputDecoration()をいれるとバリデーション後表示してくる？
 //            textAlign: TextAlign.center,
           ),
         ),

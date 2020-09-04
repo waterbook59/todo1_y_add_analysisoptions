@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo1yaddanalysisoptions/data_models/task.dart';
 import 'package:todo1yaddanalysisoptions/style.dart';
 import 'package:todo1yaddanalysisoptions/util/constants.dart';
 import 'package:todo1yaddanalysisoptions/view/components/input_part.dart';
@@ -14,13 +15,9 @@ class AddTaskScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //ここはConsumerにせずにeditTypeによって条件分岐すれば良いのでは？
-        title: Consumer<TaskViewModel>(builder: (context, model, child) {
-          return Text(
-            model.titleText,
-            style: appBarTextStyle,
-          );
-        }),
+        //ここはConsumerにせずにeditTask有無によって条件分岐すれば良いのでは？
+        //isEdit()?Text():Text()ではなく、Text(isEdit()?---:xxx)の方がシンプル
+        title:Text(_isEdit()?'Save Task':'Add Task' ,style: appBarTextStyle)
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -32,6 +29,7 @@ class AddTaskScreen extends StatelessWidget {
               Consumer<TaskViewModel>(builder: (context, model, child) {
                 return InputPart(
                   label: 'Name',
+                  //todo 更新の場合の条件追加isEdit()?textEditingController:editTask.title
                   textEditingController: model.taskNameController,
                 );
               }),
@@ -42,7 +40,7 @@ class AddTaskScreen extends StatelessWidget {
                     textEditingController: model.taskMemoController);
               }),
               const SizedBox(height: 30),
-              //ここの表記もConsumerじゃなくてeditTypeでText表記変える？
+
 
               //ボタンを横幅いっぱいに伸ばしたい
               // 方法1.SizedBox(width:double.infinity,height:,child:ボタン)
@@ -54,11 +52,10 @@ class AddTaskScreen extends StatelessWidget {
                     //todo ボタン押したらDBへ追加・更新 Fluttertoast表記
                     onPressed: ()=>_onTaskRegistered(context,editType),
                     color: Colors.purpleAccent,
-                    child: Text(
-                      'Add or Update',
-                      style: buttonTextStyle,
+                    //ここの表記もConsumerじゃなくてisEdit()でText表記変える？
+                    child:Text(_isEdit()?'Update':'Add',style: buttonTextStyle),
                     )),
-              ),
+
 //              ButtonTheme(
 //                minWidth: 300, height: 75, child: RaisedButton(
 //                //todo ボタン押したらDBへ追加・更新 Fluttertoast表記
@@ -69,13 +66,11 @@ class AddTaskScreen extends StatelessWidget {
 //                    style: buttonTextStyle,
 //                  )),
 //              )
-            ],
+            ]),
           ),
         ),
-      ),
-
+      );
       //const Center(child: Text('AddTask')),
-    );
   }
 
   //todo ボタン押したらDBへ追加・更新 Fluttertoast表記
@@ -85,13 +80,18 @@ class AddTaskScreen extends StatelessWidget {
   Future<void> _onTaskRegistered(BuildContext context ,EditType editType) async{
     print('押したら登録してTaskListへ戻る');
     final viewModel = Provider.of<TaskViewModel>(context, listen: false);
-    //validateNameした後
-     _isEdit() ?
-    await viewModel.onTaskRegistered(editType);
-    return ;
+    //todo validateNameした後
+     _isEdit()
+         ? await viewModel.onUpdateTaskRegistered(editTask)
+         : await viewModel.onAddTaskRegistered();
+    //todo Fluttertoast表記 isEdit()?更新しました:登録しました
+//    _isEdit()
+//        ?Fluttertoast
+     //todo 更新して戻るにはpushReplacement必要
+     Navigator.of(context).pop();
   }
 
-  //nullじゃない場合trueを返す
+  //nullじゃない場合true、nullだったらfalse返す
   bool _isEdit() {
     return editTask !=null;
   }
