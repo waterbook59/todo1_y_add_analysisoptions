@@ -10,7 +10,7 @@ class InputPart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      //TextとTextField左寄せ
+      //TextとTextField左寄せ、デフォルトは中央よせ
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(label,style: addTaskTextStyle,textAlign: TextAlign.start,),

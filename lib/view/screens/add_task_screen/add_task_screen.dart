@@ -6,8 +6,8 @@ import 'package:todo1yaddanalysisoptions/view/components/input_part.dart';
 import 'package:todo1yaddanalysisoptions/view_models/task_viewmodel.dart';
 
 class AddTaskScreen extends StatelessWidget {
-  const AddTaskScreen({this.editType});
-
+  const AddTaskScreen({this.editType,this.editTask});
+  final Task editTask;
   final EditType editType;
 
   @override
@@ -52,7 +52,7 @@ class AddTaskScreen extends StatelessWidget {
                 height: 75,
                 child: RaisedButton(
                     //todo ボタン押したらDBへ追加・更新 Fluttertoast表記
-                    onPressed: _onTaskRegistered,
+                    onPressed: ()=>_onTaskRegistered(context,editType),
                     color: Colors.purpleAccent,
                     child: Text(
                       'Add or Update',
@@ -78,8 +78,21 @@ class AddTaskScreen extends StatelessWidget {
     );
   }
 
-  Text _onTaskRegistered() {
+  //todo ボタン押したらDBへ追加・更新 Fluttertoast表記
+  //viewからviewModelへメソッドを投げる時に条件分岐がある場合のやり方
+  //１.view側で条件分岐しておいてviewModelは別々にシンプルにメソッドを作る
+  //２.とりあえずviewModelのメソッドを呼び出してviewModelの中で条件分岐を行う
+  Future<void> _onTaskRegistered(BuildContext context ,EditType editType) async{
     print('押したら登録してTaskListへ戻る');
-    return const Text('');
+    final viewModel = Provider.of<TaskViewModel>(context, listen: false);
+    //validateNameした後
+     _isEdit() ?
+    await viewModel.onTaskRegistered(editType);
+    return ;
+  }
+
+  //nullじゃない場合trueを返す
+  bool _isEdit() {
+    return editTask !=null;
   }
 }

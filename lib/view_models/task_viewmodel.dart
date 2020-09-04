@@ -4,6 +4,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:todo1yaddanalysisoptions/data_models/task.dart';
 import 'package:todo1yaddanalysisoptions/models/repository/task_repository.dart';
+import 'package:todo1yaddanalysisoptions/util/constants.dart';
 
 class TaskViewModel extends ChangeNotifier{
 
@@ -44,5 +45,23 @@ class TaskViewModel extends ChangeNotifier{
     print('value:$value');
     _isDone= value;
     notifyListeners();
+  }
+
+  Future<void> onTaskRegistered(EditType editType) async{
+
+    var  task = Task(
+      title: _taskNameController.text,
+      memo: _taskMemoController.text,
+      isToDo: false,
+    );
+
+    //editTypeで登録方法場合わけ
+    switch(editType){
+      case EditType.add:
+        _taskRepository.addTaskRegistered();
+        break;
+      case EditType.upload:
+        _taskRepository.uploadTaskRegistered();
+    }
   }
 }
