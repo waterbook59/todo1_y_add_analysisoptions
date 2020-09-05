@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo1yaddanalysisoptions/data_models/task.dart';
+import 'package:todo1yaddanalysisoptions/style.dart';
 
 class TaskItem extends StatelessWidget {
 
@@ -28,7 +29,7 @@ class TaskItem extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(task.title),
+                Text(task.title,style: appBarTextStyle,),
                 (task.memo.isEmpty) ? const Text('') : Text(task.memo)
               ],
             ),

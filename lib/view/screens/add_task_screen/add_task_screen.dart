@@ -13,6 +13,15 @@ class AddTaskScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final viewModel = Provider.of<TaskViewModel>(context, listen: false);
+    Future<void>(()async{
+      _isEdit()? await viewModel.getUpdateTask(editTask)
+      //なんかいいのがないから空Container
+          :Container();
+    });
+
+
     return Scaffold(
       appBar: AppBar(
         //ここはConsumerにせずにeditTask有無によって条件分岐すれば良いのでは？

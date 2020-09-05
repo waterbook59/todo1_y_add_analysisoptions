@@ -14,7 +14,12 @@ class TaskListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final viewModel = Provider.of<TaskViewModel>(context, listen: false);
-    Future<void>(viewModel.getTaskList);
+    //todo アプリ立ち上げ時、awaitしても先にEmptyView();が表示されてしまう
+//    Future<void>(viewModel.getTaskList);
+    Future<void>(()async{
+      await viewModel.getTaskList();
+      //todo ここでEmptyView表示指示すべき
+    });
     //中身が空の時の表記はTaskListView内で表示
 
     return Scaffold(

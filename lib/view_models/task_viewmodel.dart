@@ -87,7 +87,14 @@ class TaskViewModel extends ChangeNotifier{
   }
 
   Future<void>onUpdateTaskRegistered(Task editTask) async{
+
     await _taskRepository.onUpdateTaskRegistered(editTask);
+    notifyListeners();
+  }
+
+  Future<void> getUpdateTask(Task editTask) {
+    _taskNameController.text = editTask.title;
+    _taskMemoController.text = editTask.memo;
     notifyListeners();
   }
 }

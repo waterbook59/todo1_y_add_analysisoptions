@@ -10,10 +10,10 @@ class TaskListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<TaskViewModel>(builder: (context, taskViewModel, child) {
-      print(taskViewModel.tasks);
-      if (taskViewModel.tasks.isEmpty) {
-        return EmptyView();
-      }
+      print('DB接続前にEmptyViewに入ってしまう${taskViewModel.tasks}');
+//      if (taskViewModel.tasks.isEmpty) {
+//        return  EmptyView();
+//      }
       //ListView.separatedでListTileごとにラインがいれるためDivider使う
       return ListView.separated(
         itemCount: taskViewModel.tasks.length,
@@ -42,6 +42,11 @@ class TaskListView extends StatelessWidget {
 
   //todo TaskItemをタップしたらtaskをAddTaskScreenへtaskを渡す
   void _onUpdate(BuildContext context, Task task) {
+    final viewModel = Provider.of<TaskViewModel>(context, listen: false);
+    //ここでAddTaskScreenに渡すtaskの内容をview側からviewModelにセットするしかない?
+    //AddTaskScreenのはじめに
+
+
     Navigator.push(context,
         MaterialPageRoute<void>(
             builder: (context) => AddTaskScreen(editTask: task,)));
