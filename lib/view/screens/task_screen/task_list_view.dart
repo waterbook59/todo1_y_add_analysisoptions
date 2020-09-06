@@ -70,6 +70,9 @@ class TaskListView extends StatelessWidget {
   Future<void> _deleteTask(BuildContext context,Task task) async{
     final taskViewModel = Provider.of<TaskViewModel>(context, listen: false);
     await taskViewModel.taskDelete(task);
+    //todo Fluttertoast
+    //消した後、taskとるの必須！！！
+    await taskViewModel.getTaskList();
   }
 
 
