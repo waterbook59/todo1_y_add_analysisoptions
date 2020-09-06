@@ -12,3 +12,5 @@ const taskCompleteTextStyle = TextStyle(fontSize: 32, fontFamily: boldFont);
 const inputTextStyle = TextStyle(fontSize: 16, fontFamily: boldFont);
 const buttonTextStyle =
     TextStyle(fontSize: 20, fontFamily: boldFont, color: Colors.white);
+
+const taskNameStyle = TextStyle(fontSize:26,fontFamily: boldFont);

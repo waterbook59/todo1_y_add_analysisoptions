@@ -87,8 +87,9 @@ class TaskViewModel extends ChangeNotifier{
   }
 
   Future<void>onUpdateTaskRegistered(Task editTask) async{
-
+//todo controllerの値更新しないと・・・
     await _taskRepository.onUpdateTaskRegistered(editTask);
+    print('viewModel:updateできてるはずが・・・');
     notifyListeners();
   }
 
@@ -96,5 +97,10 @@ class TaskViewModel extends ChangeNotifier{
     _taskNameController.text = editTask.title;
     _taskMemoController.text = editTask.memo;
     notifyListeners();
+  }
+
+  void textClear() {
+    _taskNameController.clear();
+    _taskMemoController.clear();
   }
 }

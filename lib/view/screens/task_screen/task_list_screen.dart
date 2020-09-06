@@ -8,8 +8,7 @@ import '../../../style.dart';
 import '../add_task_screen/add_task_screen.dart';
 
 class TaskListScreen extends StatelessWidget {
-
-
+  
   @override
   Widget build(BuildContext context) {
 
@@ -41,12 +40,22 @@ class TaskListScreen extends StatelessWidget {
   }
 
   void _addTodo(BuildContext context, EditType add) {
-    Navigator.push(
+
+    Navigator.pushReplacement(
         context,
         MaterialPageRoute<void>(
             builder: (context) =>
             const AddTaskScreen(
               editType: EditType.add,
             )));
+
+//    Navigator.push(
+//        context,
+//        MaterialPageRoute<void>(
+//            builder: (context) =>
+//            const AddTaskScreen(
+//              editType: EditType.add,
+//            )));
+
   }
 }

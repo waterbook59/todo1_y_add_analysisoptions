@@ -22,24 +22,27 @@ class TaskItem extends StatelessWidget {
       //inkwell的な挙動？
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Flexible(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(task.title,style: appBarTextStyle,),
-                (task.memo.isEmpty) ? const Text('') : Text(task.memo)
-              ],
+      child: Padding(
+        padding: const EdgeInsets.all(8).copyWith(left: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(task.title,style: taskNameStyle,),
+                  (task.memo.isEmpty) ? const Text('') : Text(task.memo)
+                ],
+              ),
             ),
-          ),
-          Checkbox(
-            value: task.isToDo,
+            Checkbox(
+              value: task.isToDo,
   //todo checkの変化をDBへ反映させる taskDone(value(task.isTodo))を呼び出し元へコンストラクタ経由で返す
-            onChanged:taskDone,
-          )
-        ],
+              onChanged:taskDone,
+            )
+          ],
+        ),
       ),
     );
   }

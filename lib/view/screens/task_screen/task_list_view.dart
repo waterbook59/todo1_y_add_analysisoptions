@@ -42,14 +42,20 @@ class TaskListView extends StatelessWidget {
 
   //todo TaskItemをタップしたらtaskをAddTaskScreenへtaskを渡す
   void _onUpdate(BuildContext context, Task task) {
-    final viewModel = Provider.of<TaskViewModel>(context, listen: false);
+//    final viewModel = Provider.of<TaskViewModel>(context, listen: false);
     //ここでAddTaskScreenに渡すtaskの内容をview側からviewModelにセットするしかない?
     //AddTaskScreenのはじめに
 
-
-    Navigator.push(context,
+    Navigator.pushReplacement(
+        context,
         MaterialPageRoute<void>(
             builder: (context) => AddTaskScreen(editTask: task,)));
+
+
+//    Navigator.push(context,
+//        MaterialPageRoute<void>(
+//            builder: (context) => AddTaskScreen(editTask: task,)));
+
   }
 
   //todo TaskItem内のチェックボックスをタップしたらtask内のisDoneだけ更新

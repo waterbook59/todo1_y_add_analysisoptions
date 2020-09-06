@@ -31,6 +31,7 @@ class TaskRepository{
     try{
       final taskRecord =editTask.toTaskRecord(editTask);
       await _dao.updateTask(taskRecord);
+      print('repository:updateできてるはずが・・・');
     }on SqliteException catch(error){
       print('repositoryエラー:この問題はすでに登録${error.toString()}');
   }
