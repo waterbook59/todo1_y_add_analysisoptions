@@ -8,17 +8,23 @@ part of 'database.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
 class TaskRecord extends DataClass implements Insertable<TaskRecord> {
+  final int id;
   final String title;
   final String memo;
   final bool isToDo;
   TaskRecord(
-      {@required this.title, @required this.memo, @required this.isToDo});
+      {@required this.id,
+      @required this.title,
+      @required this.memo,
+      @required this.isToDo});
   factory TaskRecord.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
+    final intType = db.typeSystem.forDartType<int>();
     final stringType = db.typeSystem.forDartType<String>();
     final boolType = db.typeSystem.forDartType<bool>();
     return TaskRecord(
+      id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
       title:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}title']),
       memo: stringType.mapFromDatabaseResponse(data['${effectivePrefix}memo']),
@@ -30,6 +36,7 @@ class TaskRecord extends DataClass implements Insertable<TaskRecord> {
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return TaskRecord(
+      id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
       memo: serializer.fromJson<String>(json['memo']),
       isToDo: serializer.fromJson<bool>(json['isToDo']),
@@ -39,6 +46,7 @@ class TaskRecord extends DataClass implements Insertable<TaskRecord> {
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
       'title': serializer.toJson<String>(title),
       'memo': serializer.toJson<String>(memo),
       'isToDo': serializer.toJson<bool>(isToDo),
@@ -48,6 +56,7 @@ class TaskRecord extends DataClass implements Insertable<TaskRecord> {
   @override
   TaskRecordsCompanion createCompanion(bool nullToAbsent) {
     return TaskRecordsCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       title:
           title == null && nullToAbsent ? const Value.absent() : Value(title),
       memo: memo == null && nullToAbsent ? const Value.absent() : Value(memo),
@@ -56,7 +65,9 @@ class TaskRecord extends DataClass implements Insertable<TaskRecord> {
     );
   }
 
-  TaskRecord copyWith({String title, String memo, bool isToDo}) => TaskRecord(
+  TaskRecord copyWith({int id, String title, String memo, bool isToDo}) =>
+      TaskRecord(
+        id: id ?? this.id,
         title: title ?? this.title,
         memo: memo ?? this.memo,
         isToDo: isToDo ?? this.isToDo,
@@ -64,6 +75,7 @@ class TaskRecord extends DataClass implements Insertable<TaskRecord> {
   @override
   String toString() {
     return (StringBuffer('TaskRecord(')
+          ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('memo: $memo, ')
           ..write('isToDo: $isToDo')
@@ -72,35 +84,43 @@ class TaskRecord extends DataClass implements Insertable<TaskRecord> {
   }
 
   @override
-  int get hashCode =>
-      $mrjf($mrjc(title.hashCode, $mrjc(memo.hashCode, isToDo.hashCode)));
+  int get hashCode => $mrjf($mrjc(id.hashCode,
+      $mrjc(title.hashCode, $mrjc(memo.hashCode, isToDo.hashCode))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is TaskRecord &&
+          other.id == this.id &&
           other.title == this.title &&
           other.memo == this.memo &&
           other.isToDo == this.isToDo);
 }
 
 class TaskRecordsCompanion extends UpdateCompanion<TaskRecord> {
+  final Value<int> id;
   final Value<String> title;
   final Value<String> memo;
   final Value<bool> isToDo;
   const TaskRecordsCompanion({
+    this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.memo = const Value.absent(),
     this.isToDo = const Value.absent(),
   });
   TaskRecordsCompanion.insert({
+    this.id = const Value.absent(),
     @required String title,
     @required String memo,
     this.isToDo = const Value.absent(),
   })  : title = Value(title),
         memo = Value(memo);
   TaskRecordsCompanion copyWith(
-      {Value<String> title, Value<String> memo, Value<bool> isToDo}) {
+      {Value<int> id,
+      Value<String> title,
+      Value<String> memo,
+      Value<bool> isToDo}) {
     return TaskRecordsCompanion(
+      id: id ?? this.id,
       title: title ?? this.title,
       memo: memo ?? this.memo,
       isToDo: isToDo ?? this.isToDo,
@@ -113,6 +133,15 @@ class $TaskRecordsTable extends TaskRecords
   final GeneratedDatabase _db;
   final String _alias;
   $TaskRecordsTable(this._db, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  GeneratedIntColumn _id;
+  @override
+  GeneratedIntColumn get id => _id ??= _constructId();
+  GeneratedIntColumn _constructId() {
+    return GeneratedIntColumn('id', $tableName, false,
+        hasAutoIncrement: true, declaredAsPrimaryKey: true);
+  }
+
   final VerificationMeta _titleMeta = const VerificationMeta('title');
   GeneratedTextColumn _title;
   @override
@@ -147,7 +176,7 @@ class $TaskRecordsTable extends TaskRecords
   }
 
   @override
-  List<GeneratedColumn> get $columns => [title, memo, isToDo];
+  List<GeneratedColumn> get $columns => [id, title, memo, isToDo];
   @override
   $TaskRecordsTable get asDslTable => this;
   @override
@@ -158,6 +187,9 @@ class $TaskRecordsTable extends TaskRecords
   VerificationContext validateIntegrity(TaskRecordsCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
+    if (d.id.present) {
+      context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
+    }
     if (d.title.present) {
       context.handle(
           _titleMeta, title.isAcceptableValue(d.title.value, _titleMeta));
@@ -178,7 +210,7 @@ class $TaskRecordsTable extends TaskRecords
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {title};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   TaskRecord map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -188,6 +220,9 @@ class $TaskRecordsTable extends TaskRecords
   @override
   Map<String, Variable> entityToSql(TaskRecordsCompanion d) {
     final map = <String, Variable>{};
+    if (d.id.present) {
+      map['id'] = Variable<int, IntType>(d.id.value);
+    }
     if (d.title.present) {
       map['title'] = Variable<String, StringType>(d.title.value);
     }

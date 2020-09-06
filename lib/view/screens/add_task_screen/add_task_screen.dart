@@ -23,15 +23,18 @@ class AddTaskScreen extends StatelessWidget {
           : Container();
     });
 
-    //今回wiipopscopeいらん
-    return WillPopScope(
-      //Navigator.popは有効にしながら戻る時にtextControllerクリアにする
-      onWillPop: () async {
-        viewModel.textClear();
-        return false;
-      },
-      child: Scaffold(
+    //今回2画面のみなのでwiipopscopeいらん
+    return
+//      WillPopScope(
+//      //Navigator.popは有効にしながら戻る時にtextControllerクリアにする
+//      onWillPop: () async {
+//        viewModel.textClear();
+//        return false;
+//      },
+//      child:
+      Scaffold(
         appBar: AppBar(
+          //２画面でpushReplacementしてしまうとappBarの戻る使えないので手動でleading設置してみる
             leading: IconButton(
               icon: Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () {
@@ -41,7 +44,6 @@ class AddTaskScreen extends StatelessWidget {
                   MaterialPageRoute<void>(
                       builder: (context) => TaskListScreen()));},
             ),
-            //ここはConsumerにせずにeditTask有無によって条件分岐すれば良いのでは？
             //isEdit()?Text():Text()ではなく、Text(isEdit()?---:xxx)の方がシンプル
             title: Text(_isEdit() ? 'Save Task' : 'Add Task',
                 style: appBarTextStyle)),
@@ -54,7 +56,6 @@ class AddTaskScreen extends StatelessWidget {
               Consumer<TaskViewModel>(builder: (context, model, child) {
                 return InputPart(
                   label: 'Name',
-                  //todo 更新の場合の条件追加isEdit()?textEditingController:editTask.title
                   textEditingController: model.taskNameController,
                 );
               }),
@@ -79,23 +80,11 @@ class AddTaskScreen extends StatelessWidget {
                     child: Text(_isEdit() ? 'Update' : 'Add',
                         style: buttonTextStyle),
                   )),
-
-//              ButtonTheme(
-//                minWidth: 300, height: 75, child: RaisedButton(
-//                //todo ボタン押したらDBへ追加・更新 Fluttertoast表記
-//                  onPressed: _onTaskRegistered,
-//                  color: Colors.purpleAccent,
-//                  child: Text(
-//                    'ボタン',
-//                    style: buttonTextStyle,
-//                  )),
-//              )
             ]),
           ),
         ),
-      ),
-    );
-    //const Center(child: Text('AddTask')),
+      );
+//    );
   }
 
   //todo ボタン押したらDBへ追加・更新 Fluttertoast表記
@@ -133,8 +122,3 @@ class AddTaskScreen extends StatelessWidget {
 //  }
 
 }
-
-//２画面でpushReplacementしてしまうとappBarの戻る使えない？手動でleading設置してみる
-//_backToTaskList() {
-//
-//}

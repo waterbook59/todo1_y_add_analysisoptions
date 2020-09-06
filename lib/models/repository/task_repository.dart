@@ -20,6 +20,7 @@ class TaskRepository{
     print('onAddTask:viewModel層');
     try{
       final taskRecord =task.toTaskRecord(task);
+      print('repository:登録taskRecordのid:task${taskRecord.id}');
       await _dao.addTask(taskRecord);
     }on SqliteException catch(e){
       //ここでエラーを返さずにviewとviewModelのvalidationの条件に同じタイトルを弾くようにしてみる
@@ -31,7 +32,6 @@ class TaskRepository{
     try{
       final taskRecord =editTask.toTaskRecord(editTask);
       await _dao.updateTask(taskRecord);
-      print('repository:updateできてるはずが・・・');
     }on SqliteException catch(error){
       print('repositoryエラー:この問題はすでに登録${error.toString()}');
   }
@@ -40,5 +40,10 @@ class TaskRepository{
 
   Future<void> taskDone(Task updateTask) {
     print('押したらチェックボックス変わる');
+  }
+
+  Future<void> taskDelete(Task task) async{
+    final taskRecord =task.toTaskRecord(task);
+    await _dao.deleteWord(taskRecord);
   }
 }

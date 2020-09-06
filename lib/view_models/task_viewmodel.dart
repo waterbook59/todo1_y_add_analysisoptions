@@ -38,7 +38,7 @@ class TaskViewModel extends ChangeNotifier{
       print('リストが空です');
       notifyListeners();
     }else{
-      print('DB=>レポジトリ=>vieModelで取得したデータの１番目：${_tasks[0].title}');
+      print('DB=>レポジトリ=>vieModelで取得したデータの１番目：${_tasks[0].id}');
       notifyListeners();
     }
   }
@@ -78,6 +78,7 @@ class TaskViewModel extends ChangeNotifier{
   Future<void>onAddTaskRegistered() async{
     print('onAddTask:viewModel層: ${_taskNameController.text}');
     final  task = Task(
+      //idはautoIncrementするので、初期登録は何も入れなくて良い！！！
       title: _taskNameController.text,
       memo: _taskMemoController.text,
       isToDo: false,
@@ -87,9 +88,13 @@ class TaskViewModel extends ChangeNotifier{
   }
 
   Future<void>onUpdateTaskRegistered(Task editTask) async{
-//todo controllerの値更新しないと・・・
-    await _taskRepository.onUpdateTaskRegistered(editTask);
-    print('viewModel:updateできてるはずが・・・');
+//todo 結局controllerの値更新しないと・・・
+  final updateTask = Task(
+    id: editTask.id,
+    title:_taskNameController.text,
+    memo: _taskMemoController.text,
+  );
+    await _taskRepository.onUpdateTaskRegistered(updateTask);
     notifyListeners();
   }
 
@@ -102,5 +107,10 @@ class TaskViewModel extends ChangeNotifier{
   void textClear() {
     _taskNameController.clear();
     _taskMemoController.clear();
+  }
+
+  Future<void> taskDelete(Task task) async{
+   await _taskRepository.taskDelete(task);
+   notifyListeners();
   }
 }

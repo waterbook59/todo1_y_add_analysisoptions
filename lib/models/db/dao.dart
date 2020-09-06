@@ -8,7 +8,9 @@ class TasksDao extends DatabaseAccessor<MyDatabase> with _$TasksDaoMixin {
   TasksDao(MyDatabase db) : super(db);
 
   //クエリメソッド
-  //Create もし2行以上insertするときはbatchを使う
+  //todo TaskRecordではなく、 TaskRecordsCompanionを使ってtitle,memo,isToDo(できるか不明)のみ登録
+  //Create
+  // 自動採番してinsert,クエリ2行以上はbatch使う
   Future<void> addTask(TaskRecord taskRecord) =>
       into(taskRecords).insert(taskRecord);
 
@@ -21,6 +23,6 @@ class TasksDao extends DatabaseAccessor<MyDatabase> with _$TasksDaoMixin {
 
   //Delete
   Future<void> deleteWord(TaskRecord taskRecord) =>
-      (delete(taskRecords)..where((t) => t.title.equals(taskRecord.title)))
+      (delete(taskRecords)..where((t) => t.id.equals(taskRecord.id)))
           .go();
 }

@@ -9,13 +9,14 @@ import 'package:todo1yaddanalysisoptions/view_models/task_viewmodel.dart';
 class TaskListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<TaskViewModel>(builder: (context, taskViewModel, child) {
-      print('DB接続前にEmptyViewに入ってしまう${taskViewModel.tasks}');
+    return
+      Consumer<TaskViewModel>(builder: (context, taskViewModel, child) {
+      print('taskListViewのConsumer直下${taskViewModel.tasks.length}');
 //      if (taskViewModel.tasks.isEmpty) {
 //        return  EmptyView();
 //      }
       //ListView.separatedでListTileごとにラインがいれるためDivider使う
-      return ListView.separated(
+       return ListView.separated(
         itemCount: taskViewModel.tasks.length,
         itemBuilder: (BuildContext context, int index) {
           //CheckboxListTileを使うとonTap属性がない
@@ -27,6 +28,7 @@ class TaskListView extends StatelessWidget {
             onTap: () => _onUpdate(context, task),
             //todo TaskItemから返ってきたbool(value)をDBへ
             taskDone: (value)=>_taskDone(context,value,task),
+            onLongPress: ()=>_deleteTask(context,task),
           );
         },
         separatorBuilder: (context, i) => const Divider(),
@@ -64,4 +66,11 @@ class TaskListView extends StatelessWidget {
     final taskViewModel = Provider.of<TaskViewModel>(context, listen: false);
    await taskViewModel.taskDone(updateTask);
   }
+
+  Future<void> _deleteTask(BuildContext context,Task task) async{
+    final taskViewModel = Provider.of<TaskViewModel>(context, listen: false);
+    await taskViewModel.taskDelete(task);
+  }
+
+
 }

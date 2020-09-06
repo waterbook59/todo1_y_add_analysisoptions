@@ -12,12 +12,15 @@ part 'database.g.dart';
 
 //moor.dartのTableを引き継ぐ
 class TaskRecords extends Table{
+  //primaryKey用にid作成
+  IntColumn get id => integer().autoIncrement()();
   TextColumn get title => text()();
   TextColumn get memo =>text()();
   BoolColumn get isToDo => boolean().withDefault(const Constant(false))();
 
-  @override
-  Set<Column> get primaryKey => {title};
+  //同じタイトルのtodoが入れられるようにprimaryKeyをtitleではなくidへ変更する
+//  @override
+//  Set<Column> get primaryKey => {id};
 }
 
 @UseMoor(tables: [TaskRecords],daos: [TasksDao])
@@ -25,8 +28,21 @@ class MyDatabase extends _$MyDatabase{
   MyDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
+  //統合処理
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+      onCreate: (Migrator m) {
+        return m.createAll();
+      },
+      onUpgrade: (Migrator m, int from, int to) async {
+        if (from == 1) {
+          // we added the dueDate property in the change from version 1
+          await m.addColumn(taskRecords, taskRecords.id);
+        }
+      }
+  );
 
 }
 
