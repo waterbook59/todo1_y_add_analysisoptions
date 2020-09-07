@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:todo1yaddanalysisoptions/data_models/task.dart';
 import 'package:todo1yaddanalysisoptions/style.dart';
@@ -8,10 +9,8 @@ import 'package:todo1yaddanalysisoptions/view/screens/task_screen/task_list_scre
 import 'package:todo1yaddanalysisoptions/view_models/task_viewmodel.dart';
 
 class AddTaskScreen extends StatelessWidget {
-  const AddTaskScreen({this.editType, this.editTask});
-
+  const AddTaskScreen({this.editTask});
   final Task editTask;
-  final EditType editType;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +18,7 @@ class AddTaskScreen extends StatelessWidget {
     Future<void>(() async {
       _isEdit()
           ? await viewModel.getUpdateTask(editTask)
-          //なんかいいのがないから空Container
+      //なんかいいのがないから空Container
           : Container();
     });
 
@@ -40,9 +39,10 @@ class AddTaskScreen extends StatelessWidget {
               onPressed: () {
                 viewModel.textClear();
                 Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute<void>(
-                      builder: (context) => TaskListScreen()));},
+                    context,
+                    MaterialPageRoute<void>(
+                        builder: (context) => TaskListScreen()));
+              },
             ),
             //isEdit()?Text():Text()ではなく、Text(isEdit()?---:xxx)の方がシンプル
             title: Text(_isEdit() ? 'Save Task' : 'Add Task',
@@ -52,7 +52,7 @@ class AddTaskScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(children: <Widget>[
               const SizedBox(height: 20),
-              //viewModel内のTextEditingControllerを取ってきて分割先のInputPartへ投げるイメージ
+          //viewModel内のTextEditingControllerを取ってきてWidget分割先のInputPartへ投げるイメージ
               Consumer<TaskViewModel>(builder: (context, model, child) {
                 return InputPart(
                   label: 'Name',
@@ -73,10 +73,10 @@ class AddTaskScreen extends StatelessWidget {
                   width: double.infinity,
                   height: 75,
                   child: RaisedButton(
-                    //todo ボタン押したらDBへ追加・更新 Fluttertoast表記
-                    onPressed: () => _onTaskRegistered(context, editType),
+                    //ボタン押したらDBへ追加・更新 Fluttertoast表記
+                    onPressed: () => _onTaskRegistered(context),
                     color: Colors.purpleAccent,
-                    //ここの表記もConsumerじゃなくてisEdit()でText表記変える？
+                    //ここの表記もConsumerじゃなくてisEdit()でText表記変える
                     child: Text(_isEdit() ? 'Update' : 'Add',
                         style: buttonTextStyle),
                   )),
@@ -87,21 +87,27 @@ class AddTaskScreen extends StatelessWidget {
 //    );
   }
 
-  //todo ボタン押したらDBへ追加・更新 Fluttertoast表記
+  // ボタン押したらDBへ追加・更新 Fluttertoast表記
   //viewからviewModelへメソッドを投げる時に条件分岐がある場合のやり方
   //１.view側で条件分岐しておいてviewModelは別々にシンプルにメソッドを作る
   //２.とりあえずviewModelのメソッドを呼び出してviewModelの中で条件分岐を行う
-  Future<void> _onTaskRegistered(
-      BuildContext context, EditType editType) async {
+  Future<void> _onTaskRegistered(BuildContext context,) async {
     print('押したら登録してTaskListへ戻る');
     final viewModel = Provider.of<TaskViewModel>(context, listen: false);
     //todo validateNameした後
     _isEdit()
         ? await viewModel.onUpdateTaskRegistered(editTask)
         : await viewModel.onAddTaskRegistered();
-    //todo Fluttertoast表記 isEdit()?更新しました:登録しました
-//    _isEdit()
-//        ?Fluttertoast
+    await Fluttertoast.showToast(
+        msg: _isEdit()
+            ? '「${viewModel.taskNameController.text}」更新しました'
+            : '「${viewModel.taskNameController.text}」登録しました',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.purpleAccent,
+        textColor: Colors.white,
+        fontSize: 16);
 
     viewModel.textClear();
     //更新して戻るにはpushReplacement必要
@@ -114,11 +120,5 @@ class AddTaskScreen extends StatelessWidget {
     return editTask != null;
   }
 
-//ここでappBarのデフォルトのNavigator.popを使えなくする
-//  Future<bool> _backToListScreen(BuildContext context) {
-//    Navigator.pushReplacement(context,
-//        MaterialPageRoute<void>(builder: (context) => TaskListScreen()));
-//    return Future.value(false);
-//  }
 
 }

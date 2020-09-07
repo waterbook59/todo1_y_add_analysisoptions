@@ -40,7 +40,7 @@ class TaskItem extends StatelessWidget {
             ),
             Checkbox(
               value: task.isToDo,
-  //todo checkの変化をDBへ反映させる taskDone(value(task.isTodo))を呼び出し元へコンストラクタ経由で返す
+  // checkの変化をDBへ反映させる taskDone(value(task.isTodo))を呼び出し元へコンストラクタ経由で返す
               onChanged:taskCheck,
             )
           ],

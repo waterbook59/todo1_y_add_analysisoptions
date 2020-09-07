@@ -11,8 +11,8 @@ extension ConvertToTaskRecord on Task{
 
   TaskRecord toTaskRecord(Task task){
     // var wordRecord = WordRecord();のインスタンスは作らず直接代入
-    //todo varではなくfinalでも良いか
-    var  taskRecord = TaskRecord(
+    //varではなくfinalでも良い
+    final  taskRecord = TaskRecord(
       id:task.id,
       title:task.title ?? '',
       memo:task.memo ?? '',
@@ -27,8 +27,8 @@ extension ConvertToTaskRecord on Task{
 extension ConvertToTasks on List<TaskRecord>{
 
   List<Task> toTasks(List<TaskRecord> taskRecords){
-    //todo varではなくfinalでも良いか
-    var tasks = <Task>[];
+    // varではなくfinalでも良い
+    final tasks = <Task>[];
     //todo forEach書き方変える
     taskRecords.forEach((taskRecord){
       tasks.add(

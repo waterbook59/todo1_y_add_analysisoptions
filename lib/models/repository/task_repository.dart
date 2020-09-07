@@ -12,7 +12,7 @@ class TaskRepository{
 
   Future<List<Task>> getTaskList() async{
     final resultTaskRecords = await _dao.allTasks;
-    //todo returnなしだとエラー
+    // returnなしだとエラー
   return _result =resultTaskRecords.toTasks(resultTaskRecords);
   }
 

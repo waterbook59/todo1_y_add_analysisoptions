@@ -17,6 +17,7 @@ class TaskViewModel extends ChangeNotifier{
   UnmodifiableListView<Task> get tasks {
     return UnmodifiableListView(_tasks);
   }
+  //いらんかも
   bool _isDone =false;
   bool get isDone => _isDone;
 
@@ -26,7 +27,8 @@ class TaskViewModel extends ChangeNotifier{
   // It looks like you have not initialized your TextEditingController.
   TextEditingController _taskNameController= TextEditingController();
   TextEditingController _taskMemoController = TextEditingController();
-  String _titleText='タイトル';
+  //いらんかも
+  String _titleText;
   String get titleText => _titleText;
 
 
@@ -43,36 +45,7 @@ class TaskViewModel extends ChangeNotifier{
     }
   }
 
-  //todo タップしたらisTodo状態をDBへ更新 isTodoだけをDB上で更新
-  //AVOID positional boolean parameters.
-  //bool値は名前付パラメータで渡すのが原則
-//  Future<void> clickCheckButton(bool value) async{
-//    print('value:$value');
-//    _isDone= value;
-//    notifyListeners();
-//  }
-
   //今回viewModel側で条件分岐は行わずview側で行うのでeditTypeで場合わけなし
-//  Future<void> onTaskRegistered(EditType editType) async{
-//    var  task = Task(
-//      title: _taskNameController.text,
-//      memo: _taskMemoController.text,
-//      isToDo: false,
-//    );
-//    //editTypeで登録方法場合わけ
-//    switch(editType){
-//      case EditType.add:
-//        _taskRepository.addTaskRegistered();
-//        break;
-//      case EditType.upload:
-//        _taskRepository.uploadTaskRegistered();
-//    }
-//  }
-
-  //todo TaskItem内のチェックボックスをチェックしたらtask内のisDoneだけ更新
-  //関数に対して名前付きパラメータで値を受け取る！！！
-  //関数名({引数の型 引数名(これが名前になる)})
-
 
   Future<void>onAddTaskRegistered() async{
     print('onAddTask:viewModel層: ${_taskNameController.text}');
@@ -87,7 +60,7 @@ class TaskViewModel extends ChangeNotifier{
   }
 
   Future<void>onUpdateTaskRegistered(Task editTask) async{
-//todo 結局controllerの値更新しないと・・・
+//結局controllerの値更新しないと・・・
   final updateTask = Task(
     id: editTask.id,
     title:_taskNameController.text,
@@ -113,6 +86,9 @@ class TaskViewModel extends ChangeNotifier{
    notifyListeners();
   }
 
+  //TaskItem内のチェックボックスをチェックしたらtask内のisDoneだけ更新
+  //関数に対して名前付きパラメータで値を受け取る！！！
+  //関数名({引数の型 引数名(これが名前になる)})
   Future<void> taskCheck({Task updateTask,bool isDone}) async{
     await _taskRepository.onUpdateTaskRegistered(updateTask);
     notifyListeners();

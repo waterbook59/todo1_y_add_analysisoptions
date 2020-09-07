@@ -31,7 +31,7 @@ class TaskListScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.add_circle_outline),
             tooltip: '新たに追加',
-            onPressed: () => _addTodo(context, EditType.add),
+            onPressed: () => _addTodo(context),
           ),
         ],
       ),
@@ -39,14 +39,14 @@ class TaskListScreen extends StatelessWidget {
     );
   }
 
-  void _addTodo(BuildContext context, EditType add) {
+  void _addTodo(BuildContext context) {
 
     Navigator.pushReplacement(
         context,
         MaterialPageRoute<void>(
             builder: (context) =>
             const AddTaskScreen(
-              editType: EditType.add,
+
             )));
 
 //    Navigator.push(

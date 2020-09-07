@@ -45,7 +45,7 @@ class TaskListView extends StatelessWidget {
               task: task,
               // addTaskScreenへtaskを渡す
               onTap: () => _onUpdate(context, task),
-              //todo TaskItemから返ってきたbool(value)をDBへ
+              // TaskItemから返ってきたbool(value)をDBへ
               taskCheck: (value) => _taskCheck(context, value, task),
               onLongPress: () => _deleteTask(context, task),
             ),
@@ -56,17 +56,12 @@ class TaskListView extends StatelessWidget {
     });
   }
 
-//  Future<void> _clickCheckButton(bool value, BuildContext context) async {
-//    final taskViewModel = Provider.of<TaskViewModel>(context, listen: false);
-//    taskViewModel.clickCheckButton(value);
-//  }
 
-  //todo TaskItemをタップしたらtaskをAddTaskScreenへtaskを渡す
+
+  //TaskItemをタップしたらtaskをAddTaskScreenへtaskを渡す
   void _onUpdate(BuildContext context, Task task) {
-//    final viewModel = Provider.of<TaskViewModel>(context, listen: false);
-    //ここでAddTaskScreenに渡すtaskの内容をview側からviewModelにセットするしかない?
-    //AddTaskScreenのはじめに
-
+    //ここでAddTaskScreenに渡すtaskの内容をview側からviewModelにセットするよりは
+    //AddTaskScreenへtaskを渡してview側はviewModel側を読み込むだけにする
     Navigator.pushReplacement(
         context,
         MaterialPageRoute<void>(
@@ -74,12 +69,9 @@ class TaskListView extends StatelessWidget {
                   editTask: task,
                 )));
 
-//    Navigator.push(context,
-//        MaterialPageRoute<void>(
-//            builder: (context) => AddTaskScreen(editTask: task,)));
   }
 
-  //todo TaskItem内のチェックボックスをタップしたらtask内のisDoneだけ更新
+  // TaskItem内のチェックボックスをタップしたらtask内のisDoneだけ更新
   Future<void> _taskCheck(BuildContext context, bool value, Task task) async {
     final updateTask =
         Task(id: task.id, title: task.title, memo: task.memo, isToDo: value);
@@ -92,7 +84,15 @@ class TaskListView extends StatelessWidget {
   Future<void> _deleteTask(BuildContext context, Task task) async {
     final taskViewModel = Provider.of<TaskViewModel>(context, listen: false);
     await taskViewModel.taskDelete(task);
-    //todo Fluttertoast
+    // Fluttertoast
+    await Fluttertoast.showToast(
+        msg: '「${task.title}」削除しました',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.purpleAccent,
+        textColor: Colors.white,
+        fontSize: 16);
     //消した後、taskとるの必須！！！
     await taskViewModel.getTaskList();
   }
