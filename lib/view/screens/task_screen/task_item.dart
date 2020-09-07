@@ -6,7 +6,7 @@ class TaskItem extends StatelessWidget {
 
   const TaskItem(
       {Key key,
-        this.onLongPress,@required this.onTap, @required this.task, @required this.taskDone})
+        this.onLongPress,@required this.onTap, @required this.task, @required this.taskCheck})
       : super(key: key);
   final Task task;
   final VoidCallback onTap;
@@ -14,7 +14,7 @@ class TaskItem extends StatelessWidget {
 
   //参考：https://qiita.com/welchi/items/85a2c6b13902461bb4bb
   //呼び出し元のメソッド(今回は_taskDone)に合わせて戻り値と引数の型(今回はbool)を設定
-  final void Function(bool) taskDone;
+  final void Function(bool) taskCheck;
 
 
   @override
@@ -41,7 +41,7 @@ class TaskItem extends StatelessWidget {
             Checkbox(
               value: task.isToDo,
   //todo checkの変化をDBへ反映させる taskDone(value(task.isTodo))を呼び出し元へコンストラクタ経由で返す
-              onChanged:taskDone,
+              onChanged:taskCheck,
             )
           ],
         ),

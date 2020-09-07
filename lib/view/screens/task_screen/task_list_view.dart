@@ -31,6 +31,7 @@ class TaskListView extends StatelessWidget {
                 return;
               }
               if (direction == DismissDirection.startToEnd) {
+                _taskDone(context,task);
                 print('startToEnd');
                 return;
               }
@@ -45,7 +46,7 @@ class TaskListView extends StatelessWidget {
               // addTaskScreenへtaskを渡す
               onTap: () => _onUpdate(context, task),
               //todo TaskItemから返ってきたbool(value)をDBへ
-              taskDone: (value) => _taskDone(context, value, task),
+              taskCheck: (value) => _taskCheck(context, value, task),
               onLongPress: () => _deleteTask(context, task),
             ),
           );
@@ -79,12 +80,12 @@ class TaskListView extends StatelessWidget {
   }
 
   //todo TaskItem内のチェックボックスをタップしたらtask内のisDoneだけ更新
-  Future<void> _taskDone(BuildContext context, bool value, Task task) async {
+  Future<void> _taskCheck(BuildContext context, bool value, Task task) async {
     final updateTask =
         Task(id: task.id, title: task.title, memo: task.memo, isToDo: value);
     final taskViewModel = Provider.of<TaskViewModel>(context, listen: false);
     //関数に対して名前付きパラメータで値を渡す(そのままbool値だけを渡すのはよくない)
-    await taskViewModel.taskDone(updateTask: updateTask, isDone: value);
+    await taskViewModel.taskCheck(updateTask: updateTask, isDone: value);
     await taskViewModel.getTaskList();
   }
 
@@ -93,6 +94,14 @@ class TaskListView extends StatelessWidget {
     await taskViewModel.taskDelete(task);
     //todo Fluttertoast
     //消した後、taskとるの必須！！！
+    await taskViewModel.getTaskList();
+  }
+
+  Future<void> _taskDone(BuildContext context, Task task) async{
+    final doneTask =
+        Task(id:task.id,title:task.title,memo: task.memo,isToDo: true);
+    final taskViewModel = Provider.of<TaskViewModel>(context, listen: false);
+    await taskViewModel.taskDone(updateTask: doneTask);
     await taskViewModel.getTaskList();
   }
 }
