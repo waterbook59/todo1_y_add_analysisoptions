@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:todo1yaddanalysisoptions/data_models/task.dart';
 import 'package:todo1yaddanalysisoptions/view/screens/add_task_screen/add_task_screen.dart';
@@ -22,13 +23,24 @@ class TaskListView extends StatelessWidget {
           //CheckboxListTileを使うとonTap属性がない
           //CheckboxとonTapありのWidgetをGestureDetector使って自作
           final task = taskViewModel.tasks[index];
-          return TaskItem(
-            task: task,
-            // addTaskScreenへtaskを渡す
-            onTap: () => _onUpdate(context, task),
-            //todo TaskItemから返ってきたbool(value)をDBへ
-            taskDone: (value)=>_taskDone(context,value,task),
-            onLongPress: ()=>_deleteTask(context,task),
+          return Dismissible(
+            key: UniqueKey(),
+            onDismissed: (direction){
+              //再表示されるが読み込むと消える
+            _deleteTask(context, task);
+              },
+            //Start to End(左から右)
+            background: Container(color: Colors.lightGreenAccent),
+            //End to Start(右から左)
+            child:  TaskItem(
+              task: task,
+              // addTaskScreenへtaskを渡す
+              onTap: () => _onUpdate(context, task),
+              //todo TaskItemから返ってきたbool(value)をDBへ
+              taskDone: (value)=>_taskDone(context,value,task),
+              onLongPress: ()=>_deleteTask(context,task),
+            ),
+
           );
         },
         separatorBuilder: (context, i) => const Divider(),
