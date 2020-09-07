@@ -21,6 +21,10 @@ class TasksDao extends DatabaseAccessor<MyDatabase> with _$TasksDaoMixin {
   Future<void> updateTask(TaskRecord taskRecord) =>
       update(taskRecords).replace(taskRecord);
 
+  //idを基にisTodoの値をinsertする
+//  Future<void> taskDone(TaskRecord taskRecord)=>
+//  update(taskRecords).replace(taskRecord.isToDo)..where((t) => t.id.equals(taskRecord.id));
+
   //Delete
   Future<void> deleteWord(TaskRecord taskRecord) =>
       (delete(taskRecords)..where((t) => t.id.equals(taskRecord.id)))

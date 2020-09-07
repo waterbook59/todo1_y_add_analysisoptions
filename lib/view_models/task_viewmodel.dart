@@ -70,8 +70,10 @@ class TaskViewModel extends ChangeNotifier{
 //  }
 
   //todo TaskItem内のチェックボックスをチェックしたらtask内のisDoneだけ更新
-  Future<void> taskDone(Task updateTask) async{
-    await _taskRepository.taskDone(updateTask);
+  //関数に対して名前付きパラメータで値を受け取る！！！
+  //関数名({引数の型 引数名(これが名前になる)})
+  Future<void> taskDone({Task updateTask,bool isDone}) async{
+    await _taskRepository.onUpdateTaskRegistered(updateTask);
     notifyListeners();
   }
 

@@ -10,14 +10,13 @@ import 'package:todo1yaddanalysisoptions/view_models/task_viewmodel.dart';
 class TaskListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return
-      Consumer<TaskViewModel>(builder: (context, taskViewModel, child) {
+    return Consumer<TaskViewModel>(builder: (context, taskViewModel, child) {
       print('taskListViewのConsumer直下${taskViewModel.tasks.length}');
 //      if (taskViewModel.tasks.isEmpty) {
 //        return  EmptyView();
 //      }
       //ListView.separatedでListTileごとにラインがいれるためDivider使う
-       return ListView.separated(
+      return ListView.separated(
         itemCount: taskViewModel.tasks.length,
         itemBuilder: (BuildContext context, int index) {
           //CheckboxListTileを使うとonTap属性がない
@@ -25,29 +24,36 @@ class TaskListView extends StatelessWidget {
           final task = taskViewModel.tasks[index];
           return Dismissible(
             key: UniqueKey(),
-            onDismissed: (direction){
-              //再表示されるが読み込むと消える
-            _deleteTask(context, task);
-              },
+            onDismissed: (direction) {
+              if (direction == DismissDirection.endToStart) {
+                //再表示されるが読み込むと消える
+                _deleteTask(context, task);
+                return;
+              }
+              if (direction == DismissDirection.startToEnd) {
+                print('startToEnd');
+                return;
+              }
+            },
             //Start to End(左から右)
             background: Container(color: Colors.lightGreenAccent),
-            //End to Start(右から左)
-            child:  TaskItem(
+            //secondaryBackgroundはend to start
+            secondaryBackground:
+                Container(child: const Text('何もしない'), color: Colors.purple),
+            child: TaskItem(
               task: task,
               // addTaskScreenへtaskを渡す
               onTap: () => _onUpdate(context, task),
               //todo TaskItemから返ってきたbool(value)をDBへ
-              taskDone: (value)=>_taskDone(context,value,task),
-              onLongPress: ()=>_deleteTask(context,task),
+              taskDone: (value) => _taskDone(context, value, task),
+              onLongPress: () => _deleteTask(context, task),
             ),
-
           );
         },
         separatorBuilder: (context, i) => const Divider(),
       );
     });
   }
-
 
 //  Future<void> _clickCheckButton(bool value, BuildContext context) async {
 //    final taskViewModel = Provider.of<TaskViewModel>(context, listen: false);
@@ -63,29 +69,30 @@ class TaskListView extends StatelessWidget {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute<void>(
-            builder: (context) => AddTaskScreen(editTask: task,)));
-
+            builder: (context) => AddTaskScreen(
+                  editTask: task,
+                )));
 
 //    Navigator.push(context,
 //        MaterialPageRoute<void>(
 //            builder: (context) => AddTaskScreen(editTask: task,)));
-
   }
 
   //todo TaskItem内のチェックボックスをタップしたらtask内のisDoneだけ更新
-  Future<void>_taskDone(BuildContext context,bool value, Task task) async{
-    final updateTask =Task(title: task.title,memo: task.memo,isToDo: value);
+  Future<void> _taskDone(BuildContext context, bool value, Task task) async {
+    final updateTask =
+        Task(id: task.id, title: task.title, memo: task.memo, isToDo: value);
     final taskViewModel = Provider.of<TaskViewModel>(context, listen: false);
-   await taskViewModel.taskDone(updateTask);
+    //関数に対して名前付きパラメータで値を渡す(そのままbool値だけを渡すのはよくない)
+    await taskViewModel.taskDone(updateTask: updateTask, isDone: value);
+    await taskViewModel.getTaskList();
   }
 
-  Future<void> _deleteTask(BuildContext context,Task task) async{
+  Future<void> _deleteTask(BuildContext context, Task task) async {
     final taskViewModel = Provider.of<TaskViewModel>(context, listen: false);
     await taskViewModel.taskDelete(task);
     //todo Fluttertoast
     //消した後、taskとるの必須！！！
     await taskViewModel.getTaskList();
   }
-
-
 }

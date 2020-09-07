@@ -38,8 +38,8 @@ class TaskRepository{
 
   }
 
-  Future<void> taskDone(Task updateTask) {
-    print('押したらチェックボックス変わる');
+  Future<void> taskDone({Task updateTask,bool isDone}) {
+  print('repository/taskDone:ここでupdateTaskのidを基にisDoneの値をinsertする');
   }
 
   Future<void> taskDelete(Task task) async{
