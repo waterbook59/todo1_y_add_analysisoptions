@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:todo1yaddanalysisoptions/data_models/task.dart';
+import 'package:todo1yaddanalysisoptions/view/components/dismissible_container.dart';
 import 'package:todo1yaddanalysisoptions/view/screens/add_task_screen/add_task_screen.dart';
 import 'package:todo1yaddanalysisoptions/view/screens/task_screen/empty_view.dart';
 import 'package:todo1yaddanalysisoptions/view/screens/task_screen/task_item.dart';
@@ -37,10 +38,9 @@ class TaskListView extends StatelessWidget {
               }
             },
             //Start to End(左から右)
-            background: Container(color: Colors.lightGreenAccent),
+            background: const DismissibleContainer(isSecond: false),
             //secondaryBackgroundはend to start
-            secondaryBackground:
-                Container(child: const Text('何もしない'), color: Colors.purple),
+            secondaryBackground:const DismissibleContainer(isSecond: true),
             child: TaskItem(
               task: task,
               // addTaskScreenへtaskを渡す
