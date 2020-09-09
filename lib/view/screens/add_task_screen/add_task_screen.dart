@@ -17,7 +17,7 @@ class AddTaskScreen extends StatelessWidget {
     final viewModel = Provider.of<TaskViewModel>(context, listen: false);
     Future<void>(() async {
       _isEdit()
-          ? await viewModel.getUpdateTask(editTask)
+          ? viewModel.getUpdateTask(editTask)
       //なんかいいのがないから空Container
           : Container();
     });

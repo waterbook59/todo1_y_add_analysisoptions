@@ -36,6 +36,7 @@ class TaskViewModel extends ChangeNotifier{
 
   Future<void> getTaskList() async{
     _tasks = await _taskRepository.getTaskList();
+
     if(_tasks.isEmpty){
       print('リストが空です');
       notifyListeners();
@@ -44,6 +45,14 @@ class TaskViewModel extends ChangeNotifier{
       notifyListeners();
     }
   }
+
+  Future<List<Task>> getList() async{
+    _tasks = await _taskRepository.getList();
+    //ここでnotifyListeners();するとConsumer回り続ける
+//    notifyListeners();
+    return _tasks;
+  }
+
 
   //今回viewModel側で条件分岐は行わずview側で行うのでeditTypeで場合わけなし
 
@@ -70,7 +79,7 @@ class TaskViewModel extends ChangeNotifier{
     notifyListeners();
   }
 
-  Future<void> getUpdateTask(Task editTask) {
+  void getUpdateTask(Task editTask) {
     _taskNameController.text = editTask.title;
     _taskMemoController.text = editTask.memo;
     notifyListeners();
