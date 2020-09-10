@@ -24,13 +24,18 @@ class TaskViewModel extends ChangeNotifier{
   TextEditingController get taskNameController => _taskNameController;
   TextEditingController get taskMemoController => _taskMemoController;
   //the getter 'text' was called on null flutterエラーがでたら
+  // TextEditingController();必要
   // It looks like you have not initialized your TextEditingController.
   TextEditingController _taskNameController= TextEditingController();
   TextEditingController _taskMemoController = TextEditingController();
   //いらんかも
   String _titleText;
   String get titleText => _titleText;
-
+  //task追加・更新時の入力へのvalidation
+  bool _validateName = false;
+  bool get validateName => _validateName;
+  String _strValidateName;
+  String get strValidateName => _strValidateName;
 
 
 
@@ -41,7 +46,7 @@ class TaskViewModel extends ChangeNotifier{
       print('リストが空です');
       notifyListeners();
     }else{
-      print('DB=>レポジトリ=>vieModelで取得したデータの１番目：${_tasks[0].id}');
+//      print('DB=>レポジトリ=>vieModelで取得したデータの１番目：${_tasks[0].id}');
       notifyListeners();
     }
   }
@@ -88,6 +93,8 @@ class TaskViewModel extends ChangeNotifier{
   void textClear() {
     _taskNameController.clear();
     _taskMemoController.clear();
+    //errorTextを消す
+    _validateName=false;
   }
 
   Future<void> taskDelete(Task task) async{
@@ -107,6 +114,31 @@ class TaskViewModel extends ChangeNotifier{
   Future<void> taskDone({Task updateTask}) async{
     await _taskRepository.onUpdateTaskRegistered(updateTask);
     notifyListeners();
+  }
+
+  //_validateNameをtrueにセットしにいっている
+  void setValidateName({bool value}) {
+    _validateName = value;
+  }
+
+  bool validateTaskName() {
+    if(_taskNameController.text.isEmpty){
+      _strValidateName = 'Please input something.';
+      notifyListeners();
+      return false;
+    } else {
+      _strValidateName = '';
+      _validateName = false;
+      return true;
+    }
+  }
+
+  void updateValidateName() {
+    //_validateNameがtrueであれば再度validate実施
+    if (_validateName) {
+      validateTaskName();
+      notifyListeners();
+    }
   }
 
 }

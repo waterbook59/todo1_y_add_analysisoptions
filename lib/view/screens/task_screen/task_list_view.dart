@@ -33,7 +33,6 @@ class TaskListView extends StatelessWidget {
               print('EmptyView通った');
               return EmptyView();
             } else {
-              print('TaskListView通った');
               //ListView.separatedでListTileごとにラインがいれるためDivider使う
               return ListView.separated(
                 itemCount: taskViewModel.tasks.length,
