@@ -12,10 +12,6 @@ class InputPart extends StatelessWidget {
       {this.label, this.textEditingController,
         this.errorText, this.didChanged});
 
-
-
-
-
 //  final bool isTextInputEnabled;
 
   @override
@@ -34,6 +30,7 @@ class InputPart extends StatelessWidget {
             keyboardType: TextInputType.text,
             //decoration:InputDecoration()をいれるとバリデーション後エラーメッセージ表示
             decoration: InputDecoration(errorText: errorText),
+            //リアルタイムで入力した文字を返せる
             onChanged: didChanged,
 //            textAlign: TextAlign.center,
           ),

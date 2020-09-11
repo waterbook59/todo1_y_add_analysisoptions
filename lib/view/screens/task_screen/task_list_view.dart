@@ -20,7 +20,7 @@ class TaskListView extends StatelessWidget {
     //アプリ立ち上げ時、awaitしても先にEmptyView();が表示されてしまう
     //「Consumer下にFutureBuilderをおいてDB結果を待ってから描画する」が正解！！！
     return Consumer<TaskViewModel>(builder: (context, taskViewModel, child) {
-      print('taskListViewのConsumer直下${taskViewModel.tasks.length}');
+//      print('taskListViewのConsumer直下${taskViewModel.tasks[0].id}');
 
       //FutureBuilderに行かずにContainerに行ってしまう
       return FutureBuilder(
@@ -40,12 +40,12 @@ class TaskListView extends StatelessWidget {
                   //CheckboxListTileを使うとonTap属性がない
                   //CheckboxとonTapありのWidgetをGestureDetector使って自作
                   final task = taskViewModel.tasks[index];
-                  //todo Deleteするときに一瞬うつる
+
                   return Dismissible(
                     key: UniqueKey(),
                     onDismissed: (direction) {
                       if (direction == DismissDirection.endToStart) {
-                        //再表示されるが読み込むと消える
+                        //todo Deleteするときに一瞬うつる
                         _deleteTask(context, task);
                         return;
                       }

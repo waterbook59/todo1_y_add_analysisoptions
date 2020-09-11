@@ -61,8 +61,10 @@ class AddTaskScreen extends StatelessWidget {
                 textEditingController: model.taskNameController,
                 errorText: model.validateName ? model.strValidateName : null,
                 //アップデート時に書き換え始めたらエラーメッセージ消す
-                //todo なぜupdateValidateNameした時に_validateNameがtrueになっているか
-                didChanged: (_) {
+                //なぜupdateValidateNameした時に_validateNameがtrueになっているかというと..
+                // その前にonTaskRegisteredして、trueにセットされているから
+                didChanged: (value) {//valueにはString入ってInputPartから返ってくる(今回使わない)
+                  print('didChanged/value:{$value}');
                   viewModel.updateValidateName();
                 },
               );

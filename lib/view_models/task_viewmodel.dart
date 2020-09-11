@@ -127,14 +127,20 @@ class TaskViewModel extends ChangeNotifier{
       notifyListeners();
       return false;
     } else {
+      print('validateTaskName！！');
       _strValidateName = '';
-      _validateName = false;
+      _validateName = false;//ここでupdateValidateNameの実施をエラー直後だけにできる
       return true;
     }
   }
 
+//ボタンで登録・更新する時にバリデーションで出たエラーメッセージを消す
+  // ignore: lines_longer_than_80_chars
+  //登録=>_validateNameがtrue=>エラーテキスト(trueのまま)=>再度書き始める=>updateValidateName内でvalidateTaskNameしてエラー消す
   void updateValidateName() {
-    //_validateNameがtrueであれば再度validate実施
+    //エラーテキスト出た直後は_validateNameがtrueなので書き始めて再度validate実施
+    //validateTaskName内で_validateNameがfalseになるので、エラーテキスト直後だけtrueになる
+    print('validateTaskName/validateName:{$_validateName}');
     if (_validateName) {
       validateTaskName();
       notifyListeners();

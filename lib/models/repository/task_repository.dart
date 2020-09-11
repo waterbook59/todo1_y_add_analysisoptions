@@ -26,10 +26,9 @@ class TaskRepository {
   }
 
   Future<void> onAddTaskRegistered(Task task) async {
-    print('onAddTask:viewModel層');
+    print('onAddTask:repository層:${task.title}');
     try {
       final taskRecord = task.toTaskRecord(task);
-      print('repository:登録taskRecordのid:task${taskRecord.id}');
       await _dao.addTask(taskRecord);
     } on SqliteException catch (e) {
       //ここでエラーを返さずにviewとviewModelのvalidationの条件に同じタイトルを弾くようにしてみる
